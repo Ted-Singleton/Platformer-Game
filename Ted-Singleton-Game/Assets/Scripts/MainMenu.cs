@@ -31,6 +31,7 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
 
         // Stop the game in the editor - this will primarily be used for testing
-        UnityEditor.EditorApplication.isPlaying = false;
+        // This also must be commented out before building the game
+        //UnityEditor.EditorApplication.isPlaying = false;
     }
 }

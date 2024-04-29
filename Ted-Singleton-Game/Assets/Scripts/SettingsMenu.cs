@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
 {
@@ -9,9 +10,18 @@ public class SettingsMenu : MonoBehaviour
 
     public void DisplaySettings()
     {
-        //for now, just make the game fullscreen
-        Screen.fullScreen = true;
-        Debug.Log("Settings displayed");
+        // Toggle fullscreen mode
+        if(Screen.fullScreen)
+        {
+            Screen.fullScreen = false;
+        }
+        else
+        {
+            Screen.fullScreen = true;
+        }
+
+        // This does nothing in the editor, so we'll output a message to the console
+        Debug.Log("Fullscreen toggled");
     }
 
     public void InputSettings()
