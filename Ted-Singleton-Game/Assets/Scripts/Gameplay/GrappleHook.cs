@@ -2,10 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GrappleHook : MonoBehaviour
 {
-    public KeyCode grappleKey = KeyCode.Mouse0;
+    //We need the PlayerInput object to get the grapple key
+    public PlayerInput inputActions;
+    private InputAction fireGrapple;
 
     //The line renderer is used to draw the grapple hook line
     public LineRenderer lr;
@@ -26,22 +29,22 @@ public class GrappleHook : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        // We need to get and enable the PlayerInput object to get the grapple key
+        inputActions = new PlayerInput();
+        inputActions.Enable();
+        // Get the FireGrapple action from the PlayerInput object
+        fireGrapple = inputActions.OnFoot.FireGrapple;
+
+        // Subscribe to the FireGrapple action's performed and canceled events
+        // This allows us to call the StartSwing and EndSwing methods when the grapple key is pressed and released
+        fireGrapple.performed += ctx => StartSwing();
+        fireGrapple.canceled += ctx => EndSwing();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if the grapple button is pressed, start the swing
-        if (Input.GetKeyDown(grappleKey)) { 
-            StartSwing();
-        }
-
-        //if the grapple button is released, end the swing
-        if (Input.GetKeyUp(grappleKey))
-        {
-            EndSwing();
-        }
+        //Since we're subscribing to the FireGrapple action's events, we don't need to check for input here
     }
 
     private void LateUpdate()
@@ -88,7 +91,8 @@ public class GrappleHook : MonoBehaviour
 
             //use the line renderer to draw the grapple hook line
             lr.positionCount = 2;
-
+            //and make the line visible
+            lr.enabled = true;
         }
     }
 

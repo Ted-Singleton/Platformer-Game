@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
@@ -26,8 +27,7 @@ public class SettingsMenu : MonoBehaviour
 
     public void InputSettings()
     {
-        //for now, just print a message to the console
-        Debug.Log("Input settings not implemented yet");
+        SceneManager.LoadScene("InputSettings");
     }
 
     public void Back()

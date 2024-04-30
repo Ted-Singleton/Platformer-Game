@@ -2,15 +2,24 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 
 public class PlayerMovement : MonoBehaviour
 {
     //GENERAL MOVEMENT:
     //create a transform that will store our orientation
     public Transform orientation;
-    //we need floats to store our x and y inputs
-    float xInput;
-    float yInput;
+
+    //we need the movement action to subscribe to, and floats to store our x and y inputs
+    public PlayerInput inputActions;
+    private InputAction movement;
+    private float xInput;
+    private float yInput;
+
+    //we need the jump action to subscribe to
+    private InputAction jump;
+
     //we need a vector3 to store our direction
     Vector3 direction;
     //we need a rigidbody to apply forces to
@@ -44,6 +53,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
+        //first, we need the PlayerInput object to get our movement keys
+        inputActions = new PlayerInput();
+        inputActions.Enable();
+        movement = inputActions.OnFoot.Movement;
+        jump = inputActions.OnFoot.Jump;
+
+        //we subscribe to the movement and jump events to handle the player's input
+        movement.performed += ctx => HandleInput(movement.ReadValue<Vector2>());
+        movement.canceled += ctx => HandleInput(movement.ReadValue<Vector2>());
+        jump.performed += ctx => Jump();
+
         //we get the player's rigidbody
         //a rigidbody is a component that allows us to apply forces to an object
         //this allows us to move the player around using physics
@@ -67,9 +87,6 @@ public class PlayerMovement : MonoBehaviour
         {
             TouchedGround();
         }
-
-        //we handle the player's input
-        HandleInput();
 
         //we limit the player's speed, and apply drag if they are grounded
         if (isGrounded)
@@ -96,18 +113,11 @@ public class PlayerMovement : MonoBehaviour
         Move();
     }
 
-    private void HandleInput()
+    private void HandleInput(Vector2 moveVector)
     {
         //we get the player's input
-        xInput = Input.GetAxisRaw("Horizontal");
-        yInput = Input.GetAxisRaw("Vertical");
-
-        if(Input.GetKeyDown(jumpKey) && isGrounded)
-        {
-            canJump = false;
-
-            Jump();
-        }
+        xInput = moveVector.x;
+        yInput = moveVector.y;
     }
 
     private void Move()
@@ -116,7 +126,7 @@ public class PlayerMovement : MonoBehaviour
         if (isSwinging) return;
 
         //we calculate the direction the player should move in
-        direction = orientation.forward* yInput + orientation.right * xInput;
+        direction = orientation.forward * yInput + orientation.right * xInput;
 
         //we check if the player is grounded
         if (isGrounded)
@@ -150,12 +160,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-        //we reset the player's y velocity so that jumps are consistent
-        playerBody.velocity = new Vector3(playerBody.velocity.x, 0, playerBody.velocity.z);
+        if (isGrounded && canJump)
+        {
+            canJump = false;
+            //we reset the player's y velocity so that jumps are consistent
+            playerBody.velocity = new Vector3(playerBody.velocity.x, 0, playerBody.velocity.z);
 
-        //we apply a force to the player's y axis
-        //we use an impulse force mode so that the player's velocity is instantly set to the jump force
-        playerBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            //we apply a force to the player's y axis
+            //we use an impulse force mode so that the player's velocity is instantly set to the jump force
+            playerBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        }
     }
 
     private void TouchedGround()

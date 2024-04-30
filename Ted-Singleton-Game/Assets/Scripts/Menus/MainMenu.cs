@@ -13,8 +13,8 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        // Load the next scene using the build index
-        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+        // Load the next scene using its name
+        UnityEngine.SceneManagement.SceneManager.LoadScene("TestArea");
         // Lock the cursor when we start the game
         Cursor.lockState = CursorLockMode.Locked;
     }
