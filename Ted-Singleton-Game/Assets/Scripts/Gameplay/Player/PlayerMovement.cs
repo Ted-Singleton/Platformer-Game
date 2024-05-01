@@ -51,6 +51,11 @@ public class PlayerMovement : MonoBehaviour
     public bool isSwinging;
     public float swingSpeed;
 
+    //LEVELS:
+    /*We need layermasks to contain the types of objects that will reset the level on contact, as well as the goal zone*/
+    public LayerMask[] Reset;
+    public LayerMask Goal;
+
     private void Start()
     {
         //first, we need the PlayerInput object to get our movement keys
@@ -86,6 +91,24 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded)
         {
             TouchedGround();
+        }
+
+        //we check if the player touched a reset object
+        foreach (LayerMask layer in Reset)
+        {
+            if (Physics.Raycast(transform.position, Vector3.down, playerHeight / 2 + 0.2f, layer))
+            {
+                //if they did, we reset the level
+                UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            }
+        }
+
+        //we check if the player touched the goal
+        if (Physics.Raycast(transform.position, Vector3.down, playerHeight / 2 + 0.2f, Goal))
+        {
+            //if they did, we load the next level
+            GameObject goal = GameObject.Find("Goal");
+            goal.GetComponent<NextLevel>().Next();
         }
 
         //we limit the player's speed, and apply drag if they are grounded

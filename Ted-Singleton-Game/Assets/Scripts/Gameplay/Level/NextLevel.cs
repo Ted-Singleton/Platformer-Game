@@ -1,0 +1,65 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class NextLevel : MonoBehaviour
+{
+    //load the next level
+    public void Next()
+    {
+        //get the current scene name
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        //names are formatted as LevelX-Y where X is the chapter, and Y is the level number
+        //split the name by the dash
+        string[] split = currentSceneName.Split('-');
+        //get the chapter number
+        int chapter = int.Parse(split[0].Substring(5));
+        //get the level number
+        int level = int.Parse(split[1]);
+        //increment the level number
+        level++;
+        //we have 4 levels per chapter, so we want to go the the next chapter if level 4 was completed
+        //if the level number is now 5, increment the chapter number and set the level number to 1
+        if (level == 5)
+        {
+            chapter++;
+            level = 1;
+        }
+        string nextLevel = "Level" + chapter + "-" + level;
+        Debug.Log(nextLevel);
+        //if the level exists, load it
+        if (SceneExists(nextLevel))
+        {
+            SceneManager.LoadScene(nextLevel);
+        }
+        //otherwise, return to the main menu
+        else
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+    }
+
+    //check if a scene exists
+    private bool SceneExists(string sceneName)
+    {
+        //loop through all the scenes in the build settings
+        for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+        {
+            //get the scene path
+            string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
+            //split the path by the slash
+            string[] split = scenePath.Split('/');
+            //get the scene name
+            string name = split[split.Length - 1].Split('.')[0];
+            Debug.Log(name);
+            //if the scene name matches the name we're looking for, return true
+            if (name == sceneName)
+            {
+                return true;
+            }
+        }
+        //if we didn't find the scene, return false
+        return false;
+    }
+}

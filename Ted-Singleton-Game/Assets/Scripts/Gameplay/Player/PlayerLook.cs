@@ -22,6 +22,10 @@ public class PlayerLook : MonoBehaviour
     private float mouseX;
     private float mouseY;
 
+    //we need a bool to check if the script has been destroyed
+    //this isn't perfect in terms of memory management, but it prevents a number of errors if the level resets
+    private bool isDestroyed = false;
+
     private void Start()
     {
         //first, we need the PlayerInput object to get our look action
@@ -41,6 +45,9 @@ public class PlayerLook : MonoBehaviour
     // Instead, we handle the input in the HandleLook method
     private void HandleLook(Vector2 lookValues)
     {
+        //if the script should have been destroyed, we don't want to update the player's rotation
+        if(isDestroyed) return;
+
         //get the mouse input
         mouseX = lookValues.x * xSensitivity * Time.deltaTime;
         mouseY = lookValues.y * ySensitivity * Time.deltaTime;
@@ -57,5 +64,13 @@ public class PlayerLook : MonoBehaviour
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
         //and the player's body on the y axis
         orientation.rotation = Quaternion.Euler(0f, yRotation, 0f);
+    }
+
+    private void OnDestroy()
+    {
+        //we set the isDestroyed bool to true when the script is destroyed
+        isDestroyed = true;
+        //we need to unsubscribe from the look event when the script is destroyed
+        look.performed -= ctx => HandleLook(look.ReadValue<Vector2>());
     }
 }

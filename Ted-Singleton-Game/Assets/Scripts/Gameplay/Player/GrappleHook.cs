@@ -26,6 +26,9 @@ public class GrappleHook : MonoBehaviour
     //It is a physics joint that allows two objects to be connected by a spring
     private SpringJoint joint;
 
+    //we need a bool to use as a flag for if this script has been destroyed
+    private bool isDestroyed = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,6 +52,7 @@ public class GrappleHook : MonoBehaviour
 
     private void LateUpdate()
     {
+        if(isDestroyed) return;
         //if the player is swinging, draw the grapple hook line
         if (joint)
         {
@@ -59,6 +63,8 @@ public class GrappleHook : MonoBehaviour
     // Start the grapple hook swing
     private void StartSwing()
     {
+        if (isDestroyed) return;
+
         //create a raycast that we'll use to determine where the grapple hook should attach
         RaycastHit hit;
 
@@ -99,6 +105,8 @@ public class GrappleHook : MonoBehaviour
     // Handle the end of the grapple hook swing
     private void EndSwing()
     {
+        if (isDestroyed) return;
+
         //remove the spring joint and reset the line renderer
         lr.positionCount = 0;
         Destroy(joint);
@@ -109,10 +117,20 @@ public class GrappleHook : MonoBehaviour
 
     void drawLine()
     {
+        if (isDestroyed) return;
         //if the line renderer has not been initialized, return
         if (!joint) return;
         //draw a line from the player to the swing point
         lr.SetPosition(0, grapplePlayer.position);
         lr.SetPosition(1, swingPoint);
+    }
+
+    private void OnDestroy()
+    {
+        //set the isDestroyed bool to true when the script is destroyed
+        isDestroyed = true;
+        //unsubscribe from the FireGrapple action's events
+        fireGrapple.performed -= ctx => StartSwing();
+        fireGrapple.canceled -= ctx => EndSwing();
     }
 }

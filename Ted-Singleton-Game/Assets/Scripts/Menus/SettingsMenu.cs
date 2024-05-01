@@ -9,7 +9,7 @@ public class SettingsMenu : MonoBehaviour
     // We don't need to do anything in the Start method for this script
     // This is because this menu will only be accessed from another menu
 
-    public void DisplaySettings()
+    public void FullscreenToggle()
     {
         // Toggle fullscreen mode
         if(Screen.fullScreen)
@@ -27,12 +27,13 @@ public class SettingsMenu : MonoBehaviour
 
     public void InputSettings()
     {
-        SceneManager.LoadScene("InputSettings");
+        // Load the input settings menu
+        SceneManager.LoadScene("InputMenu");
     }
 
     public void Back()
     {
-        // Go back to the main menu, which is at build index 0
-        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        // Go back to the main menu
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
 }

@@ -14,9 +14,7 @@ public class MainMenu : MonoBehaviour
     public void StartGame()
     {
         // Load the next scene using its name
-        UnityEngine.SceneManagement.SceneManager.LoadScene("TestArea");
-        // Lock the cursor when we start the game
-        Cursor.lockState = CursorLockMode.Locked;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("StartGame");
     }
 
     public void Settings()
