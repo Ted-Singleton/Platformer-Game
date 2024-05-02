@@ -9,6 +9,7 @@ public class MainMenu : MonoBehaviour
     {
         // Unlock the cursor when we return to the main menu
         Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void StartGame()
@@ -19,8 +20,8 @@ public class MainMenu : MonoBehaviour
 
     public void Settings()
     {
-        // Load the settings menu using the build index
-        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+        // Load the settings menu using its name
+        UnityEngine.SceneManagement.SceneManager.LoadScene("SettingsMenu");
     }
 
     public void Quit()
