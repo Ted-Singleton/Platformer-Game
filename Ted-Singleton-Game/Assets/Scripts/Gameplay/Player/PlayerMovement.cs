@@ -106,9 +106,9 @@ public class PlayerMovement : MonoBehaviour
         //we check if the player touched the goal
         if (Physics.Raycast(transform.position, Vector3.down, playerHeight / 2 + 0.2f, Goal))
         {
-            //if they did, we load the next level
-            GameObject goal = GameObject.Find("Level");
-            goal.GetComponent<NextLevel>().LevelComplete();
+            //if they did, we load the Level Complete screen
+            GameObject levelData = GameObject.Find("LevelDataHolder");
+            levelData.GetComponent<NextLevel>().LevelComplete();
         }
 
         //we limit the player's speed, and apply drag if they are grounded

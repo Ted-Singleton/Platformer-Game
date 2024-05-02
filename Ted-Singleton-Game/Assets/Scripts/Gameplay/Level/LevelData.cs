@@ -11,11 +11,4 @@ public class LevelData : MonoBehaviour
 
     //we also need a float to hold the time taken to complete the level
     public static float time;
-
-
-    //we need to make sure that this object persists between scenes
-    private void Awake()
-    {
-        DontDestroyOnLoad(this.gameObject);
-    }
 }

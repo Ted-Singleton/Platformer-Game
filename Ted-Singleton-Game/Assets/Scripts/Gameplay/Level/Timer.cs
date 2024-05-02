@@ -16,7 +16,6 @@ public class Timer : MonoBehaviour
         if (isRunning)
         {
             float elapsedTime = Time.time - startTime;
-            Debug.Log("Elapsed Time: " + elapsedTime.ToString("F2") + " seconds");
         }
     }
 
@@ -31,7 +30,6 @@ public class Timer : MonoBehaviour
         isRunning = false;
         elapsedTime = Time.time - startTime;
         LevelData.time = elapsedTime;
-        Debug.Log("Total Time: " + elapsedTime.ToString("F2") + " seconds");
     }
 
     private void OnDestroy()
