@@ -1622,6 +1622,8 @@ GameObject:
   - component: {fileID: 1401993278}
   - component: {fileID: 1401993277}
   - component: {fileID: 1401993279}
+  - component: {fileID: 1401993281}
+  - component: {fileID: 1401993280}
   m_Layer: 0
   m_Name: LevelCompletionScript
   m_TagString: Untagged
@@ -1669,6 +1671,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3119af4608fda0644b461a510e0ff7a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1401993280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1401993276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f81de014cc0b764e8c2ea660cc5bfea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1401993281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1401993276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef5684e163b98d649bef120a79175bce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1781923929

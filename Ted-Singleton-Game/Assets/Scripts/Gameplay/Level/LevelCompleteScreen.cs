@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 public class LevelCompleteScreen : MonoBehaviour
@@ -14,6 +15,8 @@ public class LevelCompleteScreen : MonoBehaviour
     public TextMeshProUGUI levelNameText;
     public TextMeshProUGUI levelTimeText;
     public TextMeshProUGUI collectibleText;
+
+    private bool saved = false;
 
     //we need to set the color of the collectible text to purple if the collectible was gathered
     private Color collectibleColor = new Color(0.478f, 0f, 0.670f);
@@ -49,5 +52,27 @@ public class LevelCompleteScreen : MonoBehaviour
            the collectible is meant as a personal challenge for the player, and not a requirement to complete the level and compete with other players*/
         string query = $"INSERT INTO PlayerTimes(LevelID, PlayerID, CompletionTime) VALUES ('{levelName}', '{0}', '{levelTime}')";
         DatabaseManager.ExecuteQuery(query);
+    }
+
+    //we can't guarantee that every script is ready before the start method is called, so we use the update method to save the level completion status
+    private void Update()
+    {
+        //if we haven't already saved the level completion status, we attempt to
+        if (!saved)
+        {
+            //we need the level manager to get the level ID
+            LevelManager levelManager = FindObjectOfType<LevelManager>();
+            int levelID = levelManager.GetLevelID(levelName);
+
+            //if the level ID is -1, we just return, and the GetLevelID call will have logged an error
+            if (levelID == -1) return;
+
+            //we use the save manager to save the level completion status
+            SaveManager saveManager = FindObjectOfType<SaveManager>();
+            saveManager.CompleteLevel(levelID, collectibleGathered);
+
+            //we set the saved flag to true so we don't save the level completion status again
+            saved = true;
+        }
     }
 }
