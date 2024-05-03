@@ -11,4 +11,7 @@ public class LevelData : MonoBehaviour
 
     //we also need a float to hold the time taken to complete the level
     public static float time;
+
+    //we need a bool to check if the collectible was gathered
+    public static bool collectibleGathered;
 }
