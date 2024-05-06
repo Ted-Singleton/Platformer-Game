@@ -33,4 +33,21 @@ public class LevelManager : MonoBehaviour
             return levelIDs[levelName];
         }
     }
+
+    public string GetLevelName(int levelID)
+    {
+        //check if the level ID exists in the dictionary
+        foreach (KeyValuePair<string, int> level in levelIDs)
+        {
+            if (level.Value == levelID)
+            {
+                //if it does, return the level name
+                return level.Key;
+            }
+        }
+
+        //if it doesn't, log an error and return an empty string
+        Debug.LogError("Level ID not found in dictionary");
+        return "";
+    }
 }

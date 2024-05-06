@@ -83,4 +83,9 @@ public class SaveManager : MonoBehaviour
     {
         return playerProgress.collectibles[level];
     }
+
+    public PlayerProgress GetPlayerProgress()
+    {
+        return playerProgress;
+    }
 }
