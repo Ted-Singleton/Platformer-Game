@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,36 +31,53 @@ public class LevelSelect : MonoBehaviour
         playerProgress = saveManager.GetPlayerProgress();
 
         //first we check if the level has been completed, this can save us time with checking if the level is unlocked
-        levelCompleted = playerProgress.levelsCompleted[levelID];
-
-        if (levelCompleted)
+        //we'll do this in a try-catch block to avoid errors if the level id is out of range during development
+        try
         {
-            //if the level has been completed, we already know it's unlocked
-            levelUnlocked = true;
-            //we can now check if the level's collectible has been gathered
+            //we get the level's completion status from the player progress object
+            levelCompleted = playerProgress.levelsCompleted[levelID];
             collectibleGathered = playerProgress.collectibles[levelID];
-        }
-        //if the level has not been completed, we need to check if it's unlocked
-        else
-        {
-            //we can check the playerprogress object's levelsCompleted array to see if the level or the prior one has been completed
-            //we also need to be careful of the first level, as there is no prior level
-            if (levelID == 0)
+
+            //if the level has been completed, or is the first, or the previous level has been completed, we can unlock the level
+            if (levelCompleted || (levelID == 0) || playerProgress.levelsCompleted[levelID - 1])
             {
                 levelUnlocked = true;
             }
-            else
+
+            //if the level is not unlocked, we can disable the object
+            if (!levelUnlocked)
             {
-                levelUnlocked = playerProgress.levelsCompleted[levelID - 1];
+                gameObject.SetActive(false);
+                return;
             }
+
+            //if the level is unlocked, we can set the object's text to show the level's status
+            //we can also change the object's color to show the level's status
+            //to do this, we'll need to get the text component from the object
+            TextMeshProUGUI text = gameObject.GetComponentInChildren<TextMeshProUGUI>();
+
+            //if the level has been completed, we check if the collectible has been gathered
+            //we can then set the text and color according to whichever status the level is in
+            text.text = "Level " + (levelID + 1) + "\n" +
+                        (levelCompleted ? (collectibleGathered ? "Perfected" : "Completed") : "Incomplete");
+            text.color = levelCompleted ? (collectibleGathered ? Color.green : Color.yellow) : Color.red;
+        }
+        //we only really want to catch IndexOutOfRangeExceptions, and we can write to the log when this happens
+        //we can also disable the object if the level is out of range
+        catch (IndexOutOfRangeException e)
+        {
+            Debug.Log("Level with ID " + levelID + " is currently in development");
+            Debug.Log(e.Message);
+            gameObject.SetActive(false);
         }
     }
 
-    private void LoadLevel()
+    public void LoadLevel()
     {
         //we can load the level if it's unlocked
         if (levelUnlocked)
         {
+            levelManager = FindObjectOfType<LevelManager>();
             string sceneName = levelManager.GetLevelName(levelID);
             SceneManager.LoadScene(sceneName);
         }
