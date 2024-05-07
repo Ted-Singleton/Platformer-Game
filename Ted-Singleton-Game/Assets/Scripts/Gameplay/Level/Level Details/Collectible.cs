@@ -23,6 +23,11 @@ public class Collectible : MonoBehaviour
         {
             //set the collectible gathered flag to true
             LevelData.collectibleGathered = true;
+
+            //tell the HUD to update the collectible text
+            GameObject HUD = GameObject.Find("HUD");
+            HUD.GetComponent<HUDController>().ShowCollectibleText();
+
             //deactivate the collectible
             gameObject.SetActive(false);
         }

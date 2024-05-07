@@ -29,6 +29,9 @@ public class GrappleHook : MonoBehaviour
     //we need a bool to use as a flag for if this script has been destroyed
     private bool isDestroyed = false;
 
+    //we 'll use a raycast to determine whether the grapple hook is in range
+    RaycastHit hit;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,10 +68,7 @@ public class GrappleHook : MonoBehaviour
     {
         if (isDestroyed) return;
 
-        //create a raycast that we'll use to determine where the grapple hook should attach
-        RaycastHit hit;
-
-        if(Physics.Raycast(cam.position, cam.forward, out hit, grappleRange, grapplableObjects))
+        if(InGrappleRange())
         {
             //update the player's isSwinging bool to true
             player.GetComponent<PlayerMovement>().isSwinging = true;
@@ -132,5 +132,11 @@ public class GrappleHook : MonoBehaviour
         //unsubscribe from the FireGrapple action's events
         fireGrapple.performed -= ctx => StartSwing();
         fireGrapple.canceled -= ctx => EndSwing();
+    }
+
+    //we use a method to check if the player is in range of a grapple point, so that we can use it in the HUD controller
+    public bool InGrappleRange()
+    {
+        return Physics.Raycast(cam.position, cam.forward, out hit, grappleRange, grapplableObjects);
     }
 }
