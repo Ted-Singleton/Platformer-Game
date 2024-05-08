@@ -30,6 +30,9 @@ public class LevelSelect : MonoBehaviour
         saveManager = FindObjectOfType<SaveManager>();
         playerProgress = saveManager.GetPlayerProgress();
 
+        //we need the level manager to get the level's scene name
+        levelManager = FindObjectOfType<LevelManager>();
+
         //first we check if the level has been completed, this can save us time with checking if the level is unlocked
         //we'll do this in a try-catch block to avoid errors if the level id is out of range during development
         try
@@ -58,7 +61,7 @@ public class LevelSelect : MonoBehaviour
 
             //if the level has been completed, we check if the collectible has been gathered
             //we can then set the text and color according to whichever status the level is in
-            text.text = "Level " + (levelID + 1) + "\n" +
+            text.text = $"{levelManager.GetLevelName(levelID)} " + "\n" +
                         (levelCompleted ? (collectibleGathered ? "Perfected" : "Completed") : "Incomplete");
             text.color = levelCompleted ? (collectibleGathered ? Color.green : Color.yellow) : Color.red;
         }
@@ -77,7 +80,6 @@ public class LevelSelect : MonoBehaviour
         //we can load the level if it's unlocked
         if (levelUnlocked)
         {
-            levelManager = FindObjectOfType<LevelManager>();
             string sceneName = levelManager.GetLevelName(levelID);
             SceneManager.LoadScene(sceneName);
         }

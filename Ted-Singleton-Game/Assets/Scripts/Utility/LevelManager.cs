@@ -13,7 +13,8 @@ public class LevelManager : MonoBehaviour
         levelIDs = new Dictionary<string, int>
         {
             { "Level1-1", 0 },
-            { "Level1-2", 1 }
+            { "Level1-2", 1 },
+            { "Level1-3", 2 }
             //any new levels should be added here
         };
     }

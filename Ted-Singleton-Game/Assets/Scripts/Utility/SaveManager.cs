@@ -51,7 +51,10 @@ public class SaveManager : MonoBehaviour
         //otherwise, create a new save file
         else
         {
-            playerProgress = new PlayerProgress(2);
+            //we'll need to keep track of the number of levels in the game and update this value if we add more levels
+            //for now, we'll hardcode the value to 12 levels to represent 3 chapters of 4 levels
+            //in a full game, we would want to calculate this value dynamically
+            playerProgress = new PlayerProgress(12);
         }
     }
 
