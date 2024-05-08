@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using UnityEngine;
+using PlayerUtils;
 
 public class DatabaseManager : MonoBehaviour
 {
@@ -63,5 +64,44 @@ public class DatabaseManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public List<PlayerTime> GetTop100(string levelName)
+    {
+        //we want to run a query that returns the top 100 player times for a given level
+        string connectionString = "Server=localhost,1433;Database=GameDB;User Id=SA;Password=Password1!;";
+        //we'll use a premade query to get the top 100 times for a level, with the player's name and time, sorted by time
+        //we just need to replace the level name in the query with the one we want
+        string query = $@"
+            SELECT TOP 100 Players.Username, PlayerTimes.CompletionTime
+            FROM PlayerTimes
+            JOIN Players ON PlayerTimes.PlayerID = Players.PlayerID
+            WHERE PlayerTimes.LevelID = '{levelName}'
+            ORDER BY PlayerTimes.CompletionTime ASC;
+        ";
+        //as a note, if we used a playerID system like Steam's, we would be able to display other player data here, like profile pictures, country flags, etc.
+        //we could also filter the list to only show friends, or players from the same country, etc.
+
+        //we create a list of the top 100 player times
+        List<PlayerTime> top100 = new List<PlayerTime>();
+
+        //we open a connection to the database and run the query
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            using(SqlCommand command = new SqlCommand(query, connection))
+            {
+                SqlDataReader reader = command.ExecuteReader();
+                //we read the results of the query and add them to the list
+                while(reader.Read())
+                {
+                    string playerName = reader.GetString(0);
+                    float levelTime = (float)reader.GetDouble(1);
+                    PlayerTime playerTime = new PlayerTime(playerName, levelTime);
+                    top100.Add(playerTime);
+                }
+            }
+        }
+        return top100;
     }
 }

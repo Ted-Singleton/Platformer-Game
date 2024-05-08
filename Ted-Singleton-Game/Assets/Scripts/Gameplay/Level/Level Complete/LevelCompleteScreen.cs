@@ -16,8 +16,6 @@ public class LevelCompleteScreen : MonoBehaviour
     public TextMeshProUGUI levelTimeText;
     public TextMeshProUGUI collectibleText;
 
-    private bool saved = false;
-
     //we need to set the color of the collectible text to purple if the collectible was gathered
     private Color collectibleColor = new Color(0.478f, 0f, 0.670f);
 
