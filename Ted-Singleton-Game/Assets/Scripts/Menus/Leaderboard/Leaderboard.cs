@@ -11,9 +11,8 @@ public class Leaderboard : MonoBehaviour
     private int levelID;
     private string levelName;
 
-    //we need the level manager to get the level ID, and the database manager to get the player times
+    //we need the level manager to get the level ID
     private LevelManager levelManager;
-    private DatabaseManager databaseManager;
 
     //we need the textmeshpro gameobject that contains the level name text
     public TextMeshProUGUI levelNameText;
@@ -40,9 +39,6 @@ public class Leaderboard : MonoBehaviour
         levelNameText = GameObject.Find("LevelName").GetComponent<TextMeshProUGUI>();
         levelNameText.text = levelName;
 
-        //we need the database manager to get the player times
-        databaseManager = FindObjectOfType<DatabaseManager>();
-
         //we need to populate the leaderboard with the top 100 times for the level
         PopulateLeaderboard();
     }
@@ -57,7 +53,7 @@ public class Leaderboard : MonoBehaviour
         }
 
         //get the top 100 player times for the level, and store them in the playerTimes list
-        playerTimes = databaseManager.GetTop100(levelName);
+        playerTimes = DatabaseManager.GetTop100(levelName);
 
         //iterate through the playerTimes, keeping track of the position
         int position = 1;

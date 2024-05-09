@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using PlayerUtils;
 
 public class LevelCompleteScreen : MonoBehaviour
 {
@@ -44,10 +45,10 @@ public class LevelCompleteScreen : MonoBehaviour
 
         //we use the database manager to save the level data to the database
 
-        /* NOTE: we're using an ID of 0 here, as we don't have a player ID system in place yet
+        /* NOTE: we're using an ID of 1 here, as we don't have a player ID system in place yet, and 0 is reserved for testing
         in a full game, we would most likely use something like the player's Steam ID or some other unique account identifier
         this would allow us to track the player's progress across multiple devices, as well as allow for the display of profile pictures and other player-specific data*/
-        DatabaseManager.WriteTimeToDatabase(levelName, 0, levelTime);
+        DatabaseManager.WriteTimeToDatabase(levelName, 1, levelTime);
 
         //now we need to save the level completion status to the local save file
         SaveToFile();
