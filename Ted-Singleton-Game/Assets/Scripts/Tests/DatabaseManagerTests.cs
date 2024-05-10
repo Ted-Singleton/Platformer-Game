@@ -8,11 +8,13 @@ using PlayerUtils;
 public class DatabaseManagerTests
 {
     private int testPlayerID;
+    private string testLevelName;
 
     [SetUp]
     public void SetUp()
     {
         testPlayerID = 0;
+        testLevelName = "LevelTest";
         //clean up from any previous tests
         DatabaseManager.WipePlayerTimes(testPlayerID);
     }
@@ -21,7 +23,7 @@ public class DatabaseManagerTests
     public void ExecuteQuery_Success()
     {
         // Arrange
-        string query = "INSERT INTO TestTable (Column1) VALUES ('TestData')";
+        string query = $"INSERT INTO PlayerTimes (LevelID, PlayerID, CompletionTime) VALUES ('{testLevelName}', {testPlayerID}, 0.01)";
         bool queryExecuted = false;
 
         // Act
@@ -44,15 +46,14 @@ public class DatabaseManagerTests
     public void GetPlayerTime_Success()
     {
         // Arrange
-        string levelName = "Level1-1";
         float levelTime = 10.0f;
         float timeRetrieved = 0.0f;
 
         // Act
         try
         {
-            DatabaseManager.WriteTimeToDatabase(levelName, testPlayerID, levelTime);
-            timeRetrieved = DatabaseManager.GetPlayerTime(levelName, testPlayerID.ToString()).levelTime;
+            DatabaseManager.WriteTimeToDatabase(testLevelName, testPlayerID, levelTime);
+            timeRetrieved = DatabaseManager.GetPlayerTime(testLevelName, testPlayerID.ToString()).levelTime;
         }
         catch (System.Exception)
         {
@@ -68,7 +69,6 @@ public class DatabaseManagerTests
     public void WriteTimeToDatabase_Success()
     {
         // Arrange
-        string levelName = "Level1-1";
         int testPlayerID = 0;
         float levelTime = 10.0f;
         bool timeWritten = false;
@@ -76,7 +76,7 @@ public class DatabaseManagerTests
         // Act
         try
         {
-            DatabaseManager.WriteTimeToDatabase(levelName, testPlayerID, levelTime);
+            DatabaseManager.WriteTimeToDatabase(testLevelName, testPlayerID, levelTime);
             timeWritten = true;
         }
         catch (System.Exception)
@@ -118,7 +118,6 @@ public class DatabaseManagerTests
     public void WriteTimeToDatabase_NoChangeIfNotBetter()
     {
         //Arrange
-        string levelName = "Level1-1";
         int testPlayerID = 0;
         float firstTime = 10f;
         float secondTime = 20f;
@@ -129,10 +128,10 @@ public class DatabaseManagerTests
         //Act
         try
         {
-            DatabaseManager.WriteTimeToDatabase(levelName, testPlayerID, firstTime);
-            currentTime = DatabaseManager.GetPlayerTime(levelName, testPlayerID.ToString()).levelTime;
-            DatabaseManager.WriteTimeToDatabase(levelName, testPlayerID, secondTime);
-            newTime = DatabaseManager.GetPlayerTime(levelName, testPlayerID.ToString()).levelTime;
+            DatabaseManager.WriteTimeToDatabase(testLevelName, testPlayerID, firstTime);
+            currentTime = DatabaseManager.GetPlayerTime(testLevelName, testPlayerID.ToString()).levelTime;
+            DatabaseManager.WriteTimeToDatabase(testLevelName, testPlayerID, secondTime);
+            newTime = DatabaseManager.GetPlayerTime(testLevelName, testPlayerID.ToString()).levelTime;
         }
         catch (System.Exception)
         {
@@ -147,7 +146,6 @@ public class DatabaseManagerTests
     public void WriteTimeToDatabase_UpdateIfBetter()
     {
         //Arrange
-        string levelName = "Level1-1";
         int testPlayerID = 0;
         float originalTime = 10f;
         float betterTime = 0.1f;
@@ -158,10 +156,10 @@ public class DatabaseManagerTests
         //Act
         try
         {
-            DatabaseManager.WriteTimeToDatabase(levelName, testPlayerID, originalTime);
-            currentTime = DatabaseManager.GetPlayerTime(levelName, testPlayerID.ToString()).levelTime;
-            DatabaseManager.WriteTimeToDatabase(levelName, testPlayerID, betterTime);
-            newTime = DatabaseManager.GetPlayerTime(levelName, testPlayerID.ToString()).levelTime;
+            DatabaseManager.WriteTimeToDatabase(testLevelName, testPlayerID, originalTime);
+            currentTime = DatabaseManager.GetPlayerTime(testLevelName, testPlayerID.ToString()).levelTime;
+            DatabaseManager.WriteTimeToDatabase(testLevelName, testPlayerID, betterTime);
+            newTime = DatabaseManager.GetPlayerTime(testLevelName, testPlayerID.ToString()).levelTime;
         }
         catch (System.Exception)
         {
@@ -181,7 +179,6 @@ public class DatabaseManagerTests
     public void GetTop100_Success()
     {
         // Arrange
-        string levelName = "Level1-1";
         int testPlayerID = 0;
         float levelTime = 10.0f;
         List<PlayerTime> playerTimes = new List<PlayerTime>();
@@ -189,8 +186,8 @@ public class DatabaseManagerTests
         // Act
         try
         {
-            DatabaseManager.WriteTimeToDatabase(levelName, testPlayerID, levelTime);
-            playerTimes = DatabaseManager.GetTop100(levelName);
+            DatabaseManager.WriteTimeToDatabase(testLevelName, testPlayerID, levelTime);
+            playerTimes = DatabaseManager.GetTop100(testLevelName);
         }
         catch (System.Exception)
         {
@@ -206,13 +203,12 @@ public class DatabaseManagerTests
     public void GetTop100_NoResults()
     {
         // Arrange
-        string levelName = "Level1-1";
         List<PlayerTime> playerTimes = new List<PlayerTime>();
 
         // Act
         try
         {
-            playerTimes = DatabaseManager.GetTop100(levelName);
+            playerTimes = DatabaseManager.GetTop100(testLevelName);
         }
         catch (System.Exception)
         {
@@ -228,7 +224,6 @@ public class DatabaseManagerTests
     public void GetTop100_Over100Results()
     {
         // Arrange
-        string levelName = "Level1-1";
         float levelTime = 10.0f;
         List<PlayerTime> playerTimes = new List<PlayerTime>();
 
@@ -240,10 +235,10 @@ public class DatabaseManagerTests
                 //we execute a direct query to add a time to the database - this is a test, so we don't need to worry about having multiple of the same ID
                 string query = $@"
                     INSERT INTO PlayerTimes (PlayerID, LevelID, CompletionTime)
-                    VALUES ('{testPlayerID}', '{levelName}', '{levelTime}')";
+                    VALUES ('{testPlayerID}', '{testLevelName}', '{levelTime}')";
                 DatabaseManager.ExecuteQuery(query);
             }
-            playerTimes = DatabaseManager.GetTop100(levelName);
+            playerTimes = DatabaseManager.GetTop100(testLevelName);
         }
         catch (System.Exception)
         {
