@@ -25,6 +25,11 @@
   <li>Install the recommended version of Unity Editor</li>
 </ol>
 
+<h2>Setting up the Database</h2>
+During development, I have used a Microsoft SQL Server Docker container to manage my database. 
+Please create one, using port 1433 for direct compatability with my hardcoded connection string, and create a database called 'GameDB'. 
+Then, run the queries found in DBCreation.sql, to create the relevant tables and populate them with some initial data.
+
 <h2>Focus Areas</h2>
 <p>When inspecting this project for code I have written, please focus your attention in Ted-Singleton-Game/Assets/Scripts.
 This is the folder in which all my own C# scripts have been written. This also includes my unit tests for DatabaseManager.</p>
