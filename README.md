@@ -21,7 +21,7 @@
 <ol>
   <li>Download this repository, either manually or using git</li>
   <li>Install Unity Editor</li>
-  <li>Add the project to Projects</li>
+  <li>Add the Ted-Singleton-Game folder to Projects</li>
   <li>Install the recommended version of Unity Editor</li>
 </ol>
 
